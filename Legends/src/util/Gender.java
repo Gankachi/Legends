@@ -16,12 +16,11 @@ public class Gender {
 	 * Constructs a Gender. Currently supported genders are :<br>
 	 * M : Male<br>
 	 * F : Female<br>
-	 * U : Undefine
-	 * 
+	 *  
 	 * @param i	Gender ID
 	 */
 	public Gender(char i){
-		switch(id){
+		switch(i){
 		case 'M':
 			name = "male";
 			nominative = "he";
@@ -34,20 +33,15 @@ public class Gender {
 			accusative = "her";
 			possessive = "her";
 			break;
-		case 'U':
-			name = "undefined";
-			nominative = "they";
-			accusative = "them";
-			possessive = "their";
-			break;
 		}
+		id = i;
 	}
 	
 	/**
 	 * Gets the name of the gender.
 	 * @return	Name of the gender
 	 */
-	public String getName() {
+	public String name() {
 		return name;
 	}
 
@@ -55,7 +49,7 @@ public class Gender {
 	 * Returns the nominative form of the gender (ex : they).
 	 * @return	Nominative form
 	 */
-	public String getNominative() {
+	public String nominative() {
 		return nominative;
 	}
 
@@ -63,7 +57,7 @@ public class Gender {
 	 * Returns the accusative form of the gender (ex: them).
 	 * @return	Accusative form
 	 */
-	public String getAccusative() {
+	public String accusative() {
 		return accusative;
 	}
 
@@ -71,7 +65,7 @@ public class Gender {
 	 * Returns the possessive form of the gender (ex: their).
 	 * @return	Possessive form
 	 */
-	public String getPossessive() {
+	public String possessive() {
 		return possessive;
 	}
 	
@@ -79,7 +73,7 @@ public class Gender {
 	 * Returns the ID of the gender (ex: U).
 	 * @return	Gender ID
 	 */
-	public char getId() {
+	public char id() {
 		return id;
 	}
 }
