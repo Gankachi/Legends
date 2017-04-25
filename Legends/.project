@@ -18,7 +18,7 @@
 		<link>
 			<name>lib/data.db</name>
 			<type>1</type>
-			<location>/home/kevin/.git/legends/Legends/lib/data.db</location>
+			<locationURI>PROJECT_LOC/lib/data.db</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
