@@ -1,26 +1,30 @@
 package story;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Random;
 import util.*;
 
 /**
- * Generates random data for story creation.
+ * Generates random data for story creation. Uses lib/data.db as source for data.
  * @author Gankachi
  *
  */
 public class Rand {
+	
 	private static Random rdn = new Random();
 	
 	private static char genders[] = {'F','M'};
 	private static String maleNames[] = {
-		"Bob","John","Philip","Georges"
+		"Bob","John","Philip","Georges","Jack","John","Mark","Jimmy","Luther","Carter","Larry","Harry","Cedric","Matthias","Timothy"
 	};
 	private static String femaleNames[] = {
-		"Lily","Cynthia","Jenny","Tya"
+		"Lily","Cynthia","Jenny","Tya","Martha","Joana","Eleanor","Mary","Christina","Lea","Margaret","Astrid","Maeva","Courtney","Jessie"
 	};
 	
 	private static String jobs[] = {
-		"cabbage seller","cleric","warrior","mage"
+		"cabbage seller","cleric","warrior","mage","teacher","master","carpet merchant", "thief","king",
 	};
 	
 	private static String goodMotivation[] = {
@@ -37,6 +41,18 @@ public class Rand {
 	private static String kingdoms[] = {
 			"Elasia","Al'Hakmar","Chiu-Li","Feralios","Antroy"
 	};
+	
+	private static Connection connect() {
+        // SQLite connection string
+        String url = "jdbc:sqlite:/lib/data.db";
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection(url);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return conn;
+    }
 	
 	/**
 	 * Returns a random age.
