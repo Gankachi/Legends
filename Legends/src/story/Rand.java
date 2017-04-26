@@ -2,7 +2,10 @@ package story;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Random;
 import util.*;
 
@@ -16,12 +19,6 @@ public class Rand {
 	private static Random rdn = new Random();
 	
 	private static char genders[] = {'F','M'};
-	private static String maleNames[] = {
-		"Bob","John","Philip","Georges","Jack","John","Mark","Jimmy","Luther","Carter","Larry","Harry","Cedric","Matthias","Timothy"
-	};
-	private static String femaleNames[] = {
-		"Lily","Cynthia","Jenny","Tya","Martha","Joana","Eleanor","Mary","Christina","Lea","Margaret","Astrid","Maeva","Courtney","Jessie"
-	};
 	
 	private static String jobs[] = {
 		"cabbage seller","cleric","warrior","mage","teacher","master","carpet merchant", "thief","king",
@@ -38,10 +35,6 @@ public class Rand {
 		"spread chaos","eat all the cookies"
 	};
 	
-	private static String kingdoms[] = {
-			"Elasia","Al'Hakmar","Chiu-Li","Feralios","Antroy"
-	};
-	
 	private static Connection connect() {
         // SQLite connection string
         String url = "jdbc:sqlite:/lib/data.db";
@@ -53,6 +46,25 @@ public class Rand {
         }
         return conn;
     }
+	
+	public static Culture culture(){
+		String sql="select id,name from cultures order by random() limit 1";
+		Culture res = new Culture(0,"NULL");
+		try (Connection conn = connect();
+			Statement stmt  = conn.createStatement();
+			ResultSet rs    = stmt.executeQuery(sql)){
+
+			// loop through the result set
+	        while (rs.next())
+	        	res = new Culture(rs.getInt("id"),rs.getString("name"));
+	        conn.close();
+	        
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+	    }
+		return res;
+	}
+	
 	
 	/**
 	 * Returns a random age.
@@ -75,19 +87,22 @@ public class Rand {
 	 * @param g	Gender of the name
 	 * @return	Name
 	 */
-	public static String name(Gender g){
+	public static String name(Gender g, Culture culture){
+		String sql="select value from names where id in (select id from names where gender = ? and culture = ? order by random() limit 1)";
 		String res = "";
-		switch(g.id()){
-		case 'M':
-			res = maleNames[rdn.nextInt(maleNames.length)];
-			break;
-		case 'F':
-			res = femaleNames[rdn.nextInt(femaleNames.length)];
-			break;
-		default:
-			res = "NULL";
-		}
-		
+		try (Connection conn = connect();
+			PreparedStatement pstmt  = conn.prepareStatement(sql);
+			){
+			pstmt.setString(1,java.lang.Character.toString(g.id()));
+			pstmt.setInt(2, culture.id());
+			ResultSet rs    = pstmt.executeQuery();
+			while (rs.next())
+	        	res = rs.getString("value");
+			conn.close();
+	        
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+	    }
 		return res;
 	}
 	
@@ -131,7 +146,27 @@ public class Rand {
 		return res;
 	}
 	
-	public static String kingdom(){
-		return kingdoms[rdn.nextInt(kingdoms.length)];
+	public static Territory territory(Culture c){
+		
+		String sql = "Select name,size "
+				   + "from territories where id in "
+				   + "(select id from territories where culture = ? order by random() limit 1)";
+		Territory territory = new Territory(c,"","");
+		try(
+			Connection conn = connect();
+			PreparedStatement pstmt = conn.prepareStatement(sql)){
+			
+			pstmt.setInt(1, c.id());
+			ResultSet rs = pstmt.executeQuery();
+			
+			while(rs.next()){
+				territory = new Territory(c,rs.getString("name"),rs.getString("size"));
+			}
+			conn.close();
+		} catch(SQLException e){
+			System.out.println(e.getMessage());
+		}
+		
+		return territory;
 	}
 }

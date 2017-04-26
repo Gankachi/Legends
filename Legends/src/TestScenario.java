@@ -1,4 +1,4 @@
-import story.Scenario;
+import story.*;
 
 public class TestScenario {
 

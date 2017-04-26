@@ -4,19 +4,21 @@ import util.*;
 
 public abstract class Character {
 	protected Gender gender;
+	protected Culture culture;
 	protected String name;
 	protected int age;
 	protected String job;
 	protected String motivation;
 	
-	public Character(){
+	public Character(Culture c){
 		gender 		= Rand.gender();
-		name 		= Rand.name(gender);
+		culture		= c;
+		name 		= Rand.name(gender, c);
 		age 		= Rand.age(); 
 		job			= Rand.job(age);
 		motivation	= Rand.motivation("", gender);
 	}
-
+	
 	public Gender gender() {
 		return gender;
 	}

@@ -2,8 +2,8 @@ package story;
 
 public class BadGuy extends Character {
 	
-	public BadGuy() {
-		super();
+	public BadGuy(Culture cult) {
+		super(cult);
 		motivation = Rand.motivation("bad", gender);
 	}
 }
